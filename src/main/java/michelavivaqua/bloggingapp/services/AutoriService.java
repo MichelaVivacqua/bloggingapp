@@ -97,4 +97,11 @@ public class AutoriService {
         String url = (String) cloudinaryUploader.uploader().upload(image.getBytes(), ObjectUtils.emptyMap()).get("url");
         return url;
     }
+
+    public Autore uploadAutoreImage (MultipartFile image,int authorId) throws IOException{
+        Autore found = this.findById(authorId);
+        found.setAvatar(this.uploadImage(image));
+        this.autoreRepository.save(found);
+        return found;
+    }
 }

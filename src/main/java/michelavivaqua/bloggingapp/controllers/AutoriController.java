@@ -86,4 +86,7 @@ public class AutoriController {
     }
 }
 
-
+    @PostMapping("/upload/{authorId}")
+public Autore uploadAvatar (@RequestParam("avatar") MultipartFile image, @PathVariable int authorId) throws IOException {
+    return this.autoriService.uploadAutoreImage(image,authorId);
+}
