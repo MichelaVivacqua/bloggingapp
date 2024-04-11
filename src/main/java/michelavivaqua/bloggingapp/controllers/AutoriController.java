@@ -40,7 +40,8 @@ public class AutoriController {
             System.out.println(validation.getAllErrors());
             throw new BadRequestException(validation.getAllErrors()); // Inviamo la lista degli errori all'Error Handler opportuno
         }
-        // Altrimenti se non ci sono stati errori posso salvare tranquillamente lo user
+        System.out.println(body);
+    // Altrimenti se non ci sono stati errori posso salvare tranquillamente lo user
         return new NewAutoreRespDTO(this.autoriService.saveAutore(body).getId());}
 
 

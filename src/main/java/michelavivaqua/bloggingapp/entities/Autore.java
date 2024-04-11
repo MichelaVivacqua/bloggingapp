@@ -10,8 +10,8 @@ import java.util.List;
 @Getter
 @Setter
 @AllArgsConstructor
-@ToString
 @NoArgsConstructor
+@ToString
 @Entity
 public class Autore {
     @Id
@@ -26,7 +26,12 @@ public class Autore {
     @OneToMany(mappedBy = "autore")
     private List<BlogPost> blogPosts;
 
-    public Autore(String name, String surname, String email, LocalDate localDate, String avatar) {
+    public Autore(String nome, String cognome, String email, LocalDate dataDiNascita, String avatar) {
+        this.nome = nome;
+        this.cognome = cognome;
+        this.email = email;
+        this.dataDiNascita = dataDiNascita;
+        this.avatar = avatar;
     }
 }
 //public void setAvatar() {
