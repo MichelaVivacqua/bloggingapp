@@ -1,10 +1,15 @@
 package michelavivaqua.bloggingapp.controllers;
 
 import michelavivaqua.bloggingapp.entities.Autore;
+import michelavivaqua.bloggingapp.entities.NewAutoreDTO;
+import michelavivaqua.bloggingapp.entities.NewAutoreRespDTO;
+import michelavivaqua.bloggingapp.exceptions.BadRequestException;
 import michelavivaqua.bloggingapp.services.AutoriService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -21,10 +26,24 @@ public class AutoriController {
 
     @GetMapping
     public Page<Autore> getAllUsers(@RequestParam(defaultValue = "0") int page,
-                                    @RequestParam(defaultValue = "2") int size,
+                                    @RequestParam(defaultValue = "4") int size,
                                     @RequestParam(defaultValue = "id") String sortBy) {
         return this.autoriService.getAutori(page, size, sortBy);
     }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public NewAutoreRespDTO saveAutore(@RequestBody @Validated NewAutoreDTO body, BindingResult validation){
+        // @Validated valida il payload in base ai validatori utilizzati nella classe NewUserDTO
+        // BindingResult validation ci serve per valutare il risultato di questa validazione
+        if(validation.hasErrors()) { // Se ci sono stati errori di validazione dovrei triggerare un 400 Bad Request
+            System.out.println(validation.getAllErrors());
+            throw new BadRequestException(validation.getAllErrors()); // Inviamo la lista degli errori all'Error Handler opportuno
+        }
+        // Altrimenti se non ci sono stati errori posso salvare tranquillamente lo user
+        return new NewAutoreRespDTO(this.autoriService.saveAutore(body).getId());}
+
+
 
     // 2. GET http://localhost:3001/authors/{{authorId}} (ritorna un singolo autore)
     @GetMapping("/{authorId}")
@@ -33,11 +52,11 @@ public class AutoriController {
     }
 
     // 3. POST http://localhost:3001/authors (+ body) (crea un nuovo autore)
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED) // Status Code 201
-    private Autore saveAutore(@RequestBody Autore body){
-        return this.autoriService.saveAutore(body);
-    }
+//    @PostMapping
+//    @ResponseStatus(HttpStatus.CREATED) // Status Code 201
+//    private Autore saveAutore(@RequestBody Autore body){
+//        return this.autoriService.saveAutore(body);
+//    }
 
     // 4. PUT http://localhost:3001/authors/{{authorId}} (+ body) (modifica lo specifico autore)
     @PutMapping("/{authorId}")
