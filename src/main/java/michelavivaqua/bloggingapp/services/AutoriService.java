@@ -1,5 +1,7 @@
 package michelavivaqua.bloggingapp.services;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import michelavivaqua.bloggingapp.entities.Autore;
 import michelavivaqua.bloggingapp.entities.NewAutoreDTO;
 import michelavivaqua.bloggingapp.exceptions.BadRequestException;
@@ -11,13 +13,18 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @Service
 public class AutoriService {
     @Autowired
     private AutoriDAO autoreRepository;
+
+    @Autowired
+    private Cloudinary cloudinaryUploader;
 
     public AutoriService(AutoriDAO autoriRepository) {
         this.autoreRepository = autoriRepository;
@@ -84,5 +91,10 @@ public class AutoriService {
 
     public void findByIdAndDelete(int authorId) {
         autoreRepository.deleteById(authorId);
+    }
+
+    public String uploadImage(MultipartFile image) throws IOException {
+        String url = (String) cloudinaryUploader.uploader().upload(image.getBytes(), ObjectUtils.emptyMap()).get("url");
+        return url;
     }
 }

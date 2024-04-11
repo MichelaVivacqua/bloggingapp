@@ -11,6 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/authors")
@@ -72,6 +75,14 @@ public class AutoriController {
     @ResponseStatus(HttpStatus.NO_CONTENT) // Status Code 204
     public void deleteAutoreById(@PathVariable int authorId) {
         this.autoriService.findByIdAndDelete(authorId);
+    }
+
+    @PostMapping("/upload")
+    public String uploadAvatar(@RequestParam("avatar") MultipartFile image) throws IOException {
+        // "avatar" deve corrispondere ESATTAMENTE alla chiave del Multipart dove sarà contenuto il file
+        // altrimenti il file non verrà trovato
+        return this.autoriService.uploadImage(image);
+
     }
 }
 
