@@ -44,7 +44,7 @@ public class AutoriController {
             throw new BadRequestException(validation.getAllErrors()); // Inviamo la lista degli errori all'Error Handler opportuno
         }
         System.out.println(body);
-    // Altrimenti se non ci sono stati errori posso salvare tranquillamente lo user
+        // Altrimenti se non ci sono stati errori posso salvare tranquillamente lo user
         return new NewAutoreRespDTO(this.autoriService.saveAutore(body).getId());}
 
 
@@ -84,9 +84,10 @@ public class AutoriController {
         return this.autoriService.uploadImage(image);
 
     }
+    @PostMapping("/upload/{authorId}")
+    public Autore uploadAvatar (@RequestParam("avatar") MultipartFile image, @PathVariable int authorId) throws IOException {
+        return this.autoriService.uploadAutoreImage(image,authorId);
+    }
 }
 
-    @PostMapping("/upload/{authorId}")
-public Autore uploadAvatar (@RequestParam("avatar") MultipartFile image, @PathVariable int authorId) throws IOException {
-    return this.autoriService.uploadAutoreImage(image,authorId);
-}
+
